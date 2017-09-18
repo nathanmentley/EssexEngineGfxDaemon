@@ -1,13 +1,13 @@
 #files
 
 file(GLOB EssexEngineGfxDaemon_HEADERS
-    "src/Daemons/Gfx/*.h"
-    "src/Daemons/Gfx/*/*.h"
+    "src/Daemons/GfxDaemon/*.h"
+    "src/Daemons/GfxDaemon/*/*.h"
 )
 file(GLOB EssexEngineGfxDaemon_SRC
     ${EssexEngineGfxDaemon_HEADERS}
-    "src/Daemons/Gfx/*.cpp"
-    "src/Daemons/Gfx/*/*.cpp"
+    "src/Daemons/GfxDaemon/*.cpp"
+    "src/Daemons/GfxDaemon/*/*.cpp"
 )
 
 #setup headers
