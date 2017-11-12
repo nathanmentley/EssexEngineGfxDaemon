@@ -11,10 +11,11 @@
 #pragma once
 
 #include <string>
+#include <memory>
 
 #include <EssexEngineCore/IDriver.h>
-#include <EssexEngineCore/SharedPointer.h>
 #include <EssexEngineCore/WeakPointer.h>
+#include <EssexEngineCore/CachedPointer.h>
 #include <EssexEngineGfxDaemon/Entity.h>
 #include <EssexEngineGfxDaemon/Model.h>
 #include <EssexEngineFileSystemDaemon/IFileBuffer.h>
@@ -37,7 +38,7 @@ namespace Gfx{
             virtual void RenderModel(WeakPointer<Model> model) = 0;
             virtual void RenderString(std::string data, int x, int y) = 0;
         
-            virtual SharedPointer<ISprite> GetSprite(WeakPointer<FileSystem::IFileBuffer> fileContent, int _x, int _y, int _width, int _height) = 0;
+            virtual WeakPointer<ISprite> GetSprite(CachedPointer<FileSystem::IFileBuffer> fileContent, int _x, int _y, int _width, int _height) = 0;
 		private:
 	};
 }}};

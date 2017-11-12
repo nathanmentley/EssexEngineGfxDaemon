@@ -10,8 +10,7 @@
  */
 #pragma once
 
-#include <EssexEngineCore/SmartPointer.h>
-#include <EssexEngineCore/WeakPointer.h>
+#include <EssexEngineCore/CachedPointer.h>
 #include <EssexEngineGfxDaemon/ISprite.h>
 
 namespace EssexEngine{
@@ -20,7 +19,7 @@ namespace Gfx{
 	class Entity
 	{
 		public:
-			Entity(WeakPointer<ISprite> _sprite);
+			Entity(CachedPointer<ISprite> _sprite);
 			~Entity();
         
             void SetPosition(int _x, int _y);
@@ -33,7 +32,7 @@ namespace Gfx{
             WeakPointer<ISprite> GetSprite();
 		protected:
 		private:
-            WeakPointer<ISprite> sprite;
+            CachedPointer<ISprite> sprite;
 			int x;
 			int y;
             float scaleX;

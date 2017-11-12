@@ -11,9 +11,8 @@
 
 #include <EssexEngineGfxDaemon/Entity.h>
 
-EssexEngine::Daemons::Gfx::Entity::Entity(WeakPointer<Gfx::ISprite> _sprite)
+EssexEngine::Daemons::Gfx::Entity::Entity(CachedPointer<Gfx::ISprite> _sprite) : sprite(std::move(_sprite))
 {
-    sprite = _sprite;
 	x = 0;
 	y = 0;
     scaleX = 1;
@@ -25,7 +24,7 @@ EssexEngine::Daemons::Gfx::Entity::~Entity()
 }
 
 EssexEngine::WeakPointer<EssexEngine::Daemons::Gfx::ISprite> EssexEngine::Daemons::Gfx::Entity::GetSprite() {
-    return sprite;
+    return sprite.ToWeakPointer();
 }
 
 int EssexEngine::Daemons::Gfx::Entity::GetX()

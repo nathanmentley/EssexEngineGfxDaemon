@@ -10,7 +10,14 @@
  */
 #pragma once
 
+#include <utility>
+
 #include <EssexEngineCore/BaseDaemon.h>
+#include <EssexEngineCore/LogDaemon.h>
+#include <EssexEngineCore/WeakPointer.h>
+#include <EssexEngineCore/UniquePointer.h>
+#include <EssexEngineCore/CachedPointer.h>
+#include <EssexEngineCore/ResourceCache.h>
 #include <EssexEngineGfxDaemon/IGfxDriver.h>
 
 namespace EssexEngine{
@@ -23,8 +30,8 @@ namespace Gfx{
 			~GfxDaemon();
 			
 			void Init() {
-				if(GetContext()->HasDriver<Core::Logging::ILogDriver>()) {
-					GetContext()->GetDriver<Core::Logging::ILogDriver>()->LogLine(
+				if(GetContext()->HasDaemon<Core::Logging::LogDaemon>()) {
+					GetContext()->GetDaemon<Core::Logging::LogDaemon>()->LogLine(
 						"Loading Daemon [%s] [%s]",
 						GetDaemonName().c_str(),
 						GetDaemonVersion().c_str()
@@ -42,9 +49,10 @@ namespace Gfx{
             void RenderEntity(WeakPointer<Entity> entity);
             void RenderModel(WeakPointer<Model> model);
             void RenderString(std::string data, int x, int y);
-        
-			SharedPointer<ISprite> GetSprite(WeakPointer<FileSystem::IFileBuffer> fileContent, int _x, int _y, int _width, int _height);
-			SharedPointer<Entity> GetEntity(WeakPointer<ISprite> sprite);
+		
+			CachedPointer<ISprite> GetSprite(CachedPointer<FileSystem::IFileBuffer> fileContent, int _x, int _y, int _width, int _height);
+			UniquePointer<Entity> GetEntity(CachedPointer<ISprite> sprite);
 		private:
+			Core::Utils::ResourceCache<ISprite> spriteCache;
 	};
 }}};

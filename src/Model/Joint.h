@@ -25,7 +25,7 @@ namespace Gfx{
 		protected:
         private:
             std::string name;
-            int parent;
+            //int parent;
             Vector3<float> position;
             //glm::quat orient;
 	};
