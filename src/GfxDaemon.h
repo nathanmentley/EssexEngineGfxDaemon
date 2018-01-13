@@ -10,6 +10,7 @@
  */
 #pragma once
 
+#include <string>
 #include <utility>
 
 #include <EssexEngineCore/BaseDaemon.h>
@@ -18,11 +19,11 @@
 #include <EssexEngineCore/UniquePointer.h>
 #include <EssexEngineCore/CachedPointer.h>
 #include <EssexEngineCore/ResourceCache.h>
-#include <EssexEngineGfxDaemon/IGfxDriver.h>
 
-namespace EssexEngine{
-namespace Daemons{
-namespace Gfx{
+#include <EssexEngineGfxDaemon/IGfxDriver.h>
+#include <EssexEngineGfxDaemon/SpriteCacheKey.h>
+
+namespace EssexEngine::Daemons::Gfx {
 	class GfxDaemon:public BaseDaemon<IGfxDriver>
 	{
 		public:
@@ -50,9 +51,9 @@ namespace Gfx{
             void RenderModel(WeakPointer<Model> model);
             void RenderString(std::string data, int x, int y);
 		
-			CachedPointer<ISprite> GetSprite(CachedPointer<FileSystem::IFileBuffer> fileContent, int _x, int _y, int _width, int _height);
-			UniquePointer<Entity> GetEntity(CachedPointer<ISprite> sprite);
+			CachedPointer<SpriteCacheKey, ISprite> GetSprite(CachedPointer<std::string, FileSystem::IFileBuffer> fileContent, int _x, int _y, int _width, int _height);
+			UniquePointer<Entity> GetEntity(CachedPointer<SpriteCacheKey, ISprite> sprite);
 		private:
-			Core::Utils::ResourceCache<ISprite> spriteCache;
+			Core::Utils::ResourceCache<SpriteCacheKey, ISprite> spriteCache;
 	};
-}}};
+};

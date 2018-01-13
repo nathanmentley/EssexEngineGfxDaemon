@@ -11,6 +11,8 @@
 #pragma once
 
 #include <EssexEngineCore/CachedPointer.h>
+
+#include <EssexEngineGfxDaemon/SpriteCacheKey.h>
 #include <EssexEngineGfxDaemon/ISprite.h>
 
 namespace EssexEngine{
@@ -19,7 +21,7 @@ namespace Gfx{
 	class Entity
 	{
 		public:
-			Entity(CachedPointer<ISprite> _sprite);
+			Entity(CachedPointer<SpriteCacheKey, ISprite> _sprite);
 			~Entity();
         
             void SetPosition(int _x, int _y);
@@ -32,7 +34,7 @@ namespace Gfx{
             WeakPointer<ISprite> GetSprite();
 		protected:
 		private:
-            CachedPointer<ISprite> sprite;
+            CachedPointer<SpriteCacheKey, ISprite> sprite;
 			int x;
 			int y;
             float scaleX;
