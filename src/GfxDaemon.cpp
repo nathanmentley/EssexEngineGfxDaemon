@@ -12,7 +12,9 @@
 #include <EssexEngineGfxDaemon/GfxDaemon.h>
 
 EssexEngine::Daemons::Gfx::GfxDaemon::GfxDaemon(WeakPointer<Context> _context):BaseDaemon(_context),
-    spriteCache(_context->GetDaemon<Core::Logging::LogDaemon>()) {}
+    spriteCache(_context->GetDaemon<Core::Logging::LogDaemon>()) {
+    primaryContext = WeakPointer<Window::IRenderContext>();
+}
 
 EssexEngine::Daemons::Gfx::GfxDaemon::~GfxDaemon() {}
 
@@ -24,54 +26,45 @@ extern "C" {
     }
 }
 
-void EssexEngine::Daemons::Gfx::GfxDaemon::Setup()
+void EssexEngine::Daemons::Gfx::GfxDaemon::Setup(WeakPointer<Window::IRenderContext> target)
 {
+    primaryContext = target;
     if(HasDriver()) {
-        GetDriver()->Setup();
+        GetDriver()->Setup(target);
     }
 }
 
-int EssexEngine::Daemons::Gfx::GfxDaemon::GetScreenWidth()
-{
-    return GetDriver()->GetScreenWidth();
-}
-
-int EssexEngine::Daemons::Gfx::GfxDaemon::GetScreenHeight()
-{
-    return GetDriver()->GetScreenHeight();
-}
-
-void EssexEngine::Daemons::Gfx::GfxDaemon::StartRender()
+void EssexEngine::Daemons::Gfx::GfxDaemon::StartRender(WeakPointer<Window::IRenderContext> target)
 {
     if(HasDriver()) {
-        GetDriver()->StartRender();
+        GetDriver()->StartRender(target);
     }
 }
 
-void EssexEngine::Daemons::Gfx::GfxDaemon::FinishRender()
+void EssexEngine::Daemons::Gfx::GfxDaemon::FinishRender(WeakPointer<Window::IRenderContext> target)
 {
     if(HasDriver()) {
-        GetDriver()->FinishRender();
+        GetDriver()->FinishRender(target);
     }
 }
 
-void EssexEngine::Daemons::Gfx::GfxDaemon::RenderEntity(WeakPointer<Entity> entity)
+void EssexEngine::Daemons::Gfx::GfxDaemon::RenderEntity(WeakPointer<Window::IRenderContext> target, WeakPointer<Entity> entity)
 {
     if(HasDriver()) {
-        GetDriver()->RenderEntity(entity);
+        GetDriver()->RenderEntity(target, entity);
     }
 }
 
-void EssexEngine::Daemons::Gfx::GfxDaemon::RenderModel(WeakPointer<Model> model)
+void EssexEngine::Daemons::Gfx::GfxDaemon::RenderModel(WeakPointer<Window::IRenderContext> target, WeakPointer<Model> model)
 {
     if(HasDriver()) {
-        GetDriver()->RenderModel(model);
+        GetDriver()->RenderModel(target, model);
     }
 }
 
-void EssexEngine::Daemons::Gfx::GfxDaemon::RenderString(std::string data, int x, int y) {
+void EssexEngine::Daemons::Gfx::GfxDaemon::RenderString(WeakPointer<Window::IRenderContext> target, std::string data, int x, int y) {
     if(HasDriver()) {
-        GetDriver()->RenderString(data, x, y);
+        GetDriver()->RenderString(target, data, x, y);
     }
 }
 
@@ -88,4 +81,8 @@ EssexEngine::CachedPointer<EssexEngine::Daemons::Gfx::SpriteCacheKey, EssexEngin
 
 EssexEngine::UniquePointer<EssexEngine::Daemons::Gfx::Entity> EssexEngine::Daemons::Gfx::GfxDaemon::GetEntity(CachedPointer<SpriteCacheKey, ISprite> sprite) {
     return UniquePointer<Entity>(new Entity(std::move(sprite)));
+}
+
+EssexEngine::WeakPointer<EssexEngine::Daemons::Window::IRenderContext> EssexEngine::Daemons::Gfx::GfxDaemon::GetPrimaryRenderContext() {
+    return primaryContext;
 }

@@ -18,27 +18,27 @@
 #include <EssexEngineCore/CachedPointer.h>
 #include <EssexEngineGfxDaemon/Entity.h>
 #include <EssexEngineGfxDaemon/Model.h>
+
 #include <EssexEngineFileSystemDaemon/IFileBuffer.h>
+
+#include <EssexEngineWindowDaemon/IRenderContext.h>
 
 namespace EssexEngine{
 namespace Daemons{
 namespace Gfx{
-	class IGfxDriver: public Core::IDriver
-	{
-		public:
-			virtual void Setup() = 0;
+    class IGfxDriver: public Core::IDriver
+    {
+        public:
+            virtual void Setup(WeakPointer<Window::IRenderContext> target) = 0;
         
-            virtual int GetScreenWidth() = 0;
-            virtual int GetScreenHeight() = 0;
-        
-            virtual void StartRender() = 0;
-            virtual void FinishRender() = 0;
-			
-            virtual void RenderEntity(WeakPointer<Entity> entity) = 0;
-            virtual void RenderModel(WeakPointer<Model> model) = 0;
-            virtual void RenderString(std::string data, int x, int y) = 0;
+            virtual void StartRender(WeakPointer<Window::IRenderContext> target) = 0;
+            virtual void FinishRender(WeakPointer<Window::IRenderContext> target) = 0;
+            
+            virtual void RenderEntity(WeakPointer<Window::IRenderContext> target, WeakPointer<Entity> entity) = 0;
+            virtual void RenderModel(WeakPointer<Window::IRenderContext> target, WeakPointer<Model> model) = 0;
+            virtual void RenderString(WeakPointer<Window::IRenderContext> target, std::string data, int x, int y) = 0;
         
             virtual WeakPointer<ISprite> GetSprite(CachedPointer<std::string, FileSystem::IFileBuffer> fileContent, int _x, int _y, int _width, int _height) = 0;
-		private:
-	};
+        private:
+    };
 }}};
