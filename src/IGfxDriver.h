@@ -16,6 +16,7 @@
 #include <EssexEngineCore/IDriver.h>
 #include <EssexEngineCore/WeakPointer.h>
 #include <EssexEngineCore/CachedPointer.h>
+
 #include <EssexEngineGfxDaemon/Entity.h>
 #include <EssexEngineGfxDaemon/Model.h>
 
