@@ -18,11 +18,11 @@
 namespace EssexEngine{
 namespace Daemons{
 namespace Gfx{
-	class Entity
-	{
-		public:
-			Entity(CachedPointer<SpriteCacheKey, ISprite> _sprite);
-			~Entity();
+    class Entity
+    {
+        public:
+            Entity(CachedPointer<SpriteCacheKey, ISprite> _sprite);
+            ~Entity();
         
             void SetPosition(int _x, int _y);
             void SetScale(float _scaleX, float _scaleY);
@@ -32,12 +32,12 @@ namespace Gfx{
             float GetScaleY();
         
             WeakPointer<ISprite> GetSprite();
-		protected:
-		private:
+        protected:
+        private:
             CachedPointer<SpriteCacheKey, ISprite> sprite;
-			int x;
-			int y;
+            int x;
+            int y;
             float scaleX;
             float scaleY;
-	};
+    };
 }}};

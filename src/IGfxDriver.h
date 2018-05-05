@@ -38,7 +38,7 @@ namespace Gfx{
             virtual void RenderModel(WeakPointer<Window::IRenderContext> target, WeakPointer<Model> model) = 0;
             virtual void RenderString(WeakPointer<Window::IRenderContext> target, std::string data, int x, int y) = 0;
         
-            virtual WeakPointer<ISprite> GetSprite(CachedPointer<std::string, FileSystem::IFileBuffer> fileContent, int _x, int _y, int _width, int _height) = 0;
+            virtual WeakPointer<ISprite> GetSprite(WeakPointer<Daemons::Window::IRenderContext> target, CachedPointer<std::string, FileSystem::IFileBuffer> fileContent, int _x, int _y, int _width, int _height) = 0;
         private:
     };
 }}};

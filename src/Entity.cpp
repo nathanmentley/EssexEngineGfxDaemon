@@ -13,8 +13,8 @@
 
 EssexEngine::Daemons::Gfx::Entity::Entity(CachedPointer<Gfx::SpriteCacheKey, Gfx::ISprite> _sprite) : sprite(std::move(_sprite))
 {
-	x = 0;
-	y = 0;
+    x = 0;
+    y = 0;
     scaleX = 1;
     scaleY = 1;
 }

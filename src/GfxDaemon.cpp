@@ -11,22 +11,27 @@
 
 #include <EssexEngineGfxDaemon/GfxDaemon.h>
 
-EssexEngine::Daemons::Gfx::GfxDaemon::GfxDaemon(WeakPointer<Context> _context):BaseDaemon(_context),
-    spriteCache(_context->GetDaemon<Core::Logging::LogDaemon>()) {
-    primaryContext = WeakPointer<Window::IRenderContext>();
+using EssexEngine::CachedPointer;
+using EssexEngine::UniquePointer;
+using EssexEngine::WeakPointer;
+
+using EssexEngine::Core::Logging::LogDaemon;
+
+using EssexEngine::Daemons::Gfx::GfxDaemon;
+using EssexEngine::Daemons::Gfx::Entity;
+using EssexEngine::Daemons::Gfx::ISprite;
+using EssexEngine::Daemons::Gfx::SpriteCacheKey;
+using EssexEngine::Daemons::Window::IRenderContext;
+using EssexEngine::Daemons::FileSystem::IFileBuffer;
+
+GfxDaemon::GfxDaemon(WeakPointer<Context> _context):BaseDaemon(_context),
+    spriteCache(_context->GetDaemon<LogDaemon>()) {
+    primaryContext = WeakPointer<IRenderContext>();
 }
 
-EssexEngine::Daemons::Gfx::GfxDaemon::~GfxDaemon() {}
+GfxDaemon::~GfxDaemon() {}
 
-extern "C" {
-    void daemon_init(EssexEngine::Context* context) {
-        context->RegisterDaemon<EssexEngine::Daemons::Gfx::GfxDaemon>(
-            new EssexEngine::Daemons::Gfx::GfxDaemon(context)
-        );
-    }
-}
-
-void EssexEngine::Daemons::Gfx::GfxDaemon::Setup(WeakPointer<Window::IRenderContext> target)
+void GfxDaemon::Setup(WeakPointer<IRenderContext> target)
 {
     primaryContext = target;
     if(HasDriver()) {
@@ -34,55 +39,55 @@ void EssexEngine::Daemons::Gfx::GfxDaemon::Setup(WeakPointer<Window::IRenderCont
     }
 }
 
-void EssexEngine::Daemons::Gfx::GfxDaemon::StartRender(WeakPointer<Window::IRenderContext> target)
+void GfxDaemon::StartRender(WeakPointer<IRenderContext> target)
 {
     if(HasDriver()) {
         GetDriver()->StartRender(target);
     }
 }
 
-void EssexEngine::Daemons::Gfx::GfxDaemon::FinishRender(WeakPointer<Window::IRenderContext> target)
+void GfxDaemon::FinishRender(WeakPointer<IRenderContext> target)
 {
     if(HasDriver()) {
         GetDriver()->FinishRender(target);
     }
 }
 
-void EssexEngine::Daemons::Gfx::GfxDaemon::RenderEntity(WeakPointer<Window::IRenderContext> target, WeakPointer<Entity> entity)
+void GfxDaemon::RenderEntity(WeakPointer<IRenderContext> target, WeakPointer<Entity> entity)
 {
     if(HasDriver()) {
         GetDriver()->RenderEntity(target, entity);
     }
 }
 
-void EssexEngine::Daemons::Gfx::GfxDaemon::RenderModel(WeakPointer<Window::IRenderContext> target, WeakPointer<Model> model)
+void GfxDaemon::RenderModel(WeakPointer<IRenderContext> target, WeakPointer<Model> model)
 {
     if(HasDriver()) {
         GetDriver()->RenderModel(target, model);
     }
 }
 
-void EssexEngine::Daemons::Gfx::GfxDaemon::RenderString(WeakPointer<Window::IRenderContext> target, std::string data, int x, int y) {
+void GfxDaemon::RenderString(WeakPointer<IRenderContext> target, std::string data, int x, int y) {
     if(HasDriver()) {
         GetDriver()->RenderString(target, data, x, y);
     }
 }
 
-EssexEngine::CachedPointer<EssexEngine::Daemons::Gfx::SpriteCacheKey, EssexEngine::Daemons::Gfx::ISprite> EssexEngine::Daemons::Gfx::GfxDaemon::GetSprite(CachedPointer<std::string, FileSystem::IFileBuffer> fileContent, int _x, int _y, int _width, int _height) {
+CachedPointer<SpriteCacheKey, ISprite> GfxDaemon::GetSprite(WeakPointer<IRenderContext> target, CachedPointer<std::string, IFileBuffer> fileContent, int _x, int _y, int _width, int _height) {
     SpriteCacheKey key = SpriteCacheKey(fileContent->GetFileName(), _x, _y, _width, _height);
 
     if (!spriteCache.HasKey(key)) {
-        WeakPointer<ISprite> sprite = GetDriver()->GetSprite(std::move(fileContent), _x, _y, _width, _height);
+        WeakPointer<ISprite> sprite = GetDriver()->GetSprite(target, std::move(fileContent), _x, _y, _width, _height);
         spriteCache.Cache(key, sprite);
     }
 
     return spriteCache.Get(key);
 }
 
-EssexEngine::UniquePointer<EssexEngine::Daemons::Gfx::Entity> EssexEngine::Daemons::Gfx::GfxDaemon::GetEntity(CachedPointer<SpriteCacheKey, ISprite> sprite) {
+UniquePointer<Entity> GfxDaemon::GetEntity(CachedPointer<SpriteCacheKey, ISprite> sprite) {
     return UniquePointer<Entity>(new Entity(std::move(sprite)));
 }
 
-EssexEngine::WeakPointer<EssexEngine::Daemons::Window::IRenderContext> EssexEngine::Daemons::Gfx::GfxDaemon::GetPrimaryRenderContext() {
+WeakPointer<IRenderContext> GfxDaemon::GetPrimaryRenderContext() {
     return primaryContext;
 }
