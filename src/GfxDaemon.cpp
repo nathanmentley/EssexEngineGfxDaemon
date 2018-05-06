@@ -20,12 +20,16 @@ using EssexEngine::Core::Logging::LogDaemon;
 using EssexEngine::Daemons::Gfx::GfxDaemon;
 using EssexEngine::Daemons::Gfx::Entity;
 using EssexEngine::Daemons::Gfx::ISprite;
+using EssexEngine::Daemons::Gfx::IFont;
 using EssexEngine::Daemons::Gfx::SpriteCacheKey;
+using EssexEngine::Daemons::Gfx::FontCacheKey;
 using EssexEngine::Daemons::Window::IRenderContext;
 using EssexEngine::Daemons::FileSystem::IFileBuffer;
 
 GfxDaemon::GfxDaemon(WeakPointer<Context> _context):BaseDaemon(_context),
-    spriteCache(_context->GetDaemon<LogDaemon>()) {
+    spriteCache(_context->GetDaemon<LogDaemon>()),
+    fontCache(_context->GetDaemon<LogDaemon>())
+{
     primaryContext = WeakPointer<IRenderContext>();
 }
 
@@ -67,10 +71,21 @@ void GfxDaemon::RenderModel(WeakPointer<IRenderContext> target, WeakPointer<Mode
     }
 }
 
-void GfxDaemon::RenderString(WeakPointer<IRenderContext> target, std::string data, int x, int y) {
+void GfxDaemon::RenderString(WeakPointer<IRenderContext> target, WeakPointer<IFont> font, std::string data, int x, int y) {
     if(HasDriver()) {
-        GetDriver()->RenderString(target, data, x, y);
+        GetDriver()->RenderString(target, font, data, x, y);
     }
+}
+
+CachedPointer<FontCacheKey, IFont> GfxDaemon::GetFont(WeakPointer<Window::IRenderContext> target, CachedPointer<std::string, FileSystem::IFileBuffer> fileContent, int fontSize) {
+    FontCacheKey key = FontCacheKey(fileContent->GetFileName(), fontSize);
+
+    if (!fontCache.HasKey(key)) {
+        WeakPointer<IFont> font = GetDriver()->GetFont(target, std::move(fileContent), fontSize);
+        fontCache.Cache(key, font);
+    }
+
+    return fontCache.Get(key);
 }
 
 CachedPointer<SpriteCacheKey, ISprite> GfxDaemon::GetSprite(WeakPointer<IRenderContext> target, CachedPointer<std::string, IFileBuffer> fileContent, int _x, int _y, int _width, int _height) {

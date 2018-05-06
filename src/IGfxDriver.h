@@ -19,6 +19,7 @@
 
 #include <EssexEngineGfxDaemon/Entity.h>
 #include <EssexEngineGfxDaemon/Model.h>
+#include <EssexEngineGfxDaemon/IFont.h>
 
 #include <EssexEngineFileSystemDaemon/IFileBuffer.h>
 
@@ -37,8 +38,9 @@ namespace Gfx{
             
             virtual void RenderEntity(WeakPointer<Window::IRenderContext> target, WeakPointer<Entity> entity) = 0;
             virtual void RenderModel(WeakPointer<Window::IRenderContext> target, WeakPointer<Model> model) = 0;
-            virtual void RenderString(WeakPointer<Window::IRenderContext> target, std::string data, int x, int y) = 0;
+            virtual void RenderString(WeakPointer<Window::IRenderContext> target, WeakPointer<IFont> font, std::string data, int x, int y) = 0;
         
+            virtual WeakPointer<IFont> GetFont(WeakPointer<Daemons::Window::IRenderContext> target, CachedPointer<std::string, FileSystem::IFileBuffer> fileContent, int fontSize) = 0;
             virtual WeakPointer<ISprite> GetSprite(WeakPointer<Daemons::Window::IRenderContext> target, CachedPointer<std::string, FileSystem::IFileBuffer> fileContent, int _x, int _y, int _width, int _height) = 0;
         private:
     };

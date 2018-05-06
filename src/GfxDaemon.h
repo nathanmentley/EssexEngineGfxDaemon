@@ -22,6 +22,7 @@
 
 #include <EssexEngineGfxDaemon/IGfxDriver.h>
 #include <EssexEngineGfxDaemon/SpriteCacheKey.h>
+#include <EssexEngineGfxDaemon/FontCacheKey.h>
 
 #include <EssexEngineWindowDaemon/IRenderContext.h>
 
@@ -49,13 +50,15 @@ namespace EssexEngine::Daemons::Gfx {
             void FinishRender(WeakPointer<Window::IRenderContext> target);
             void RenderEntity(WeakPointer<Window::IRenderContext> target, WeakPointer<Entity> entity);
             void RenderModel(WeakPointer<Window::IRenderContext> target, WeakPointer<Model> model);
-            void RenderString(WeakPointer<Window::IRenderContext> target, std::string data, int x, int y);
+            void RenderString(WeakPointer<Window::IRenderContext> target, WeakPointer<IFont> font, std::string data, int x, int y);
         
+            CachedPointer<FontCacheKey, IFont> GetFont(WeakPointer<Window::IRenderContext> target, CachedPointer<std::string, FileSystem::IFileBuffer> fileContent, int fontSize);
             CachedPointer<SpriteCacheKey, ISprite> GetSprite(WeakPointer<Window::IRenderContext> target, CachedPointer<std::string, FileSystem::IFileBuffer> fileContent, int _x, int _y, int _width, int _height);
             UniquePointer<Entity> GetEntity(CachedPointer<SpriteCacheKey, ISprite> sprite);
             WeakPointer<Window::IRenderContext> GetPrimaryRenderContext();
         private:
             Core::Utils::ResourceCache<SpriteCacheKey, ISprite> spriteCache;
+            Core::Utils::ResourceCache<FontCacheKey, IFont> fontCache;
             WeakPointer<Window::IRenderContext> primaryContext;
     };
 };
