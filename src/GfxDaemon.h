@@ -55,10 +55,8 @@ namespace EssexEngine::Daemons::Gfx {
             CachedPointer<FontCacheKey, IFont> GetFont(WeakPointer<Window::IRenderContext> target, CachedPointer<std::string, FileSystem::IFileBuffer> fileContent, int fontSize);
             CachedPointer<SpriteCacheKey, ISprite> GetSprite(WeakPointer<Window::IRenderContext> target, CachedPointer<std::string, FileSystem::IFileBuffer> fileContent, int _x, int _y, int _width, int _height);
             UniquePointer<Entity> GetEntity(CachedPointer<SpriteCacheKey, ISprite> sprite);
-            WeakPointer<Window::IRenderContext> GetPrimaryRenderContext();
         private:
             Core::Utils::ResourceCache<SpriteCacheKey, ISprite> spriteCache;
             Core::Utils::ResourceCache<FontCacheKey, IFont> fontCache;
-            WeakPointer<Window::IRenderContext> primaryContext;
     };
 };

@@ -28,16 +28,12 @@ using EssexEngine::Daemons::FileSystem::IFileBuffer;
 
 GfxDaemon::GfxDaemon(WeakPointer<Context> _context):BaseDaemon(_context),
     spriteCache(_context->GetDaemon<LogDaemon>()),
-    fontCache(_context->GetDaemon<LogDaemon>())
-{
-    primaryContext = WeakPointer<IRenderContext>();
-}
+    fontCache(_context->GetDaemon<LogDaemon>()) {}
 
 GfxDaemon::~GfxDaemon() {}
 
 void GfxDaemon::Setup(WeakPointer<IRenderContext> target)
 {
-    primaryContext = target;
     if(HasDriver()) {
         GetDriver()->Setup(target);
     }
@@ -101,8 +97,4 @@ CachedPointer<SpriteCacheKey, ISprite> GfxDaemon::GetSprite(WeakPointer<IRenderC
 
 UniquePointer<Entity> GfxDaemon::GetEntity(CachedPointer<SpriteCacheKey, ISprite> sprite) {
     return UniquePointer<Entity>(new Entity(std::move(sprite)));
-}
-
-WeakPointer<IRenderContext> GfxDaemon::GetPrimaryRenderContext() {
-    return primaryContext;
 }
