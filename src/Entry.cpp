@@ -17,9 +17,13 @@ using EssexEngine::WeakPointer;
 using EssexEngine::Daemons::Gfx::GfxDaemon;
 
 extern "C" {
-    void daemon_init(WeakPointer<Context> context) {
+    void* daemon_init(WeakPointer<Context> context) {
+        GfxDaemon* daemon = new GfxDaemon(context);
+
         context->RegisterDaemon<GfxDaemon>(
-            new GfxDaemon(context)
+            daemon
         );
+
+        return daemon;
     }
 }
