@@ -31,7 +31,8 @@ namespace Gfx{
     class IGfxDriver: public Core::IDriver
     {
         public:
-            virtual void Setup(WeakPointer<Window::IRenderContext> target) = 0;
+            virtual void SetupGfx() = 0;
+            virtual void SetupRenderContext(WeakPointer<Window::IRenderContext> target) = 0;
         
             virtual void StartRender(WeakPointer<Window::IRenderContext> target) = 0;
             virtual void FinishRender(WeakPointer<Window::IRenderContext> target) = 0;

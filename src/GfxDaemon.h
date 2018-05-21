@@ -13,13 +13,14 @@
 #include <string>
 #include <utility>
 
-#include <EssexEngineCore/BaseDaemon.h>
+#include <EssexEngineCore/BaseProcessDaemon.h>
 #include <EssexEngineCore/LogDaemon.h>
 #include <EssexEngineCore/WeakPointer.h>
 #include <EssexEngineCore/UniquePointer.h>
 #include <EssexEngineCore/CachedPointer.h>
 #include <EssexEngineCore/ResourceCache.h>
 
+#include <EssexEngineGfxDaemon/GfxDaemonMessage.h>
 #include <EssexEngineGfxDaemon/IGfxDriver.h>
 #include <EssexEngineGfxDaemon/SpriteCacheKey.h>
 #include <EssexEngineGfxDaemon/FontCacheKey.h>
@@ -27,7 +28,7 @@
 #include <EssexEngineWindowDaemon/IRenderContext.h>
 
 namespace EssexEngine::Daemons::Gfx {
-    class GfxDaemon:public BaseDaemon<IGfxDriver>
+    class GfxDaemon:public BaseProcessDaemon<IGfxDriver>
     {
         public:
             GfxDaemon(WeakPointer<Context> _context);
@@ -45,7 +46,8 @@ namespace EssexEngine::Daemons::Gfx {
             std::string GetDaemonName() { return "Gfx"; }
             std::string GetDaemonVersion() { return ESSEX_ENGINE_VERSION; }
             
-            void Setup(WeakPointer<Window::IRenderContext> target);
+            void SetupGfx();
+            void SetupRenderContext(WeakPointer<Window::IRenderContext> target);
             void StartRender(WeakPointer<Window::IRenderContext> target);
             void FinishRender(WeakPointer<Window::IRenderContext> target);
             void RenderEntity(WeakPointer<Window::IRenderContext> target, WeakPointer<Entity> entity);
@@ -55,6 +57,16 @@ namespace EssexEngine::Daemons::Gfx {
             CachedPointer<FontCacheKey, IFont> GetFont(WeakPointer<Window::IRenderContext> target, CachedPointer<std::string, FileSystem::IFileBuffer> fileContent, int fontSize);
             CachedPointer<SpriteCacheKey, ISprite> GetSprite(WeakPointer<Window::IRenderContext> target, CachedPointer<std::string, FileSystem::IFileBuffer> fileContent, int _x, int _y, int _width, int _height);
             UniquePointer<Entity> GetEntity(CachedPointer<SpriteCacheKey, ISprite> sprite);
+        protected:
+            WeakPointer<Core::Models::IMessageResponse> ProcessMessage(WeakPointer<Core::Models::IMessage> message);
+            
+            WeakPointer<GfxDaemonMessageResponse> _SetupGfx(WeakPointer<GfxDaemonMessage> message);
+            WeakPointer<GfxDaemonMessageResponse> _SetupRenderContext(WeakPointer<GfxDaemonMessage> message);
+            WeakPointer<GfxDaemonMessageResponse> _StartRender(WeakPointer<GfxDaemonMessage> message);
+            WeakPointer<GfxDaemonMessageResponse> _FinishRender(WeakPointer<GfxDaemonMessage> message);
+            WeakPointer<GfxDaemonMessageResponse> _RenderEntity(WeakPointer<GfxDaemonMessage> message);
+            WeakPointer<GfxDaemonMessageResponse> _RenderModel(WeakPointer<GfxDaemonMessage> message);
+            WeakPointer<GfxDaemonMessageResponse> _RenderString(WeakPointer<GfxDaemonMessage> message);
         private:
             Core::Utils::ResourceCache<SpriteCacheKey, ISprite> spriteCache;
             Core::Utils::ResourceCache<FontCacheKey, IFont> fontCache;
